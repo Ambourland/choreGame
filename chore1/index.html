@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chore Quest</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>🌟 Chore Quest Game 🌟</h1>
+
+  <div class="stars">
+    <strong>Stars Collected:</strong> <span class="star-count">0</span>
+  </div>
+
+  <div class="chore-list">
+    <h2>Choose a Chore</h2>
+    <ul>
+      <li><button onclick="completeChore('Put away toys', 1)">🧸 Put away toys (1⭐)</button></li>
+      <li><button onclick="completeChore('Make bed', 2)">🛏 Make bed (2⭐)</button></li>
+      <li><button onclick="completeChore('Vacuum room', 3)">🧹 Vacuum room (3⭐)</button></li>
+    </ul>
+  </div>
+
+  <div class="powerup">
+    <h2>🎲 Daily Power-Up</h2>
+    <button onclick="getPowerUp()">Spin Power-Up</button>
+    <p id="powerup-result" style="margin-top: 10px;"></p>
+  </div>
+
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chore Quest: World Tour Edition</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: #f0f8ff;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #4a90e2;
+    }
+    select, input, button {
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .section {
+      background: #ffffff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    .star {
+      color: #ff9800;
+      font-weight: bold;
+    }
+    .btn {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #45a049;
+    }
+    .theme-title {
+      text-align: center;
+      font-size: 1.3em;
+      margin-top: 10px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🌟 Chore Quest: World Tour Edition 🌟</h1>
+
+<div class="section">
+  <label for="theme">Choose a World:</label>
+  <select id="theme" onchange="updateTheme()">
+    <option value="hero">🦸 Hero HQ</option>
+    <option value="pirate">🏴‍☠️ Pirate's Cove</option>
+    <option value="space">🚀 Galactic Galaxy</option>
+    <option value="safari">🐾 Wild Safari</option>
+    <option value="wizard">🧙 Wizarding World</option>
+    <option value="dino">🦕 Dino World</option>
+  </select>
+  <div class="theme-title" id="themeTitle"></div>
+</div>
+
+<div class="section">
+  <h2>🛠 Build Your Chore List</h2>
+  <input id="choreInput" placeholder="Enter your chore...">
+  <select id="difficulty">
+    <option value="1">⭐ Easy</option>
+    <option value="2">⭐⭐ Medium</option>
+    <option value="3">⭐⭐⭐ Hard</option>
+  </select>
+  <button class="btn" onclick="addChore()">Add Chore</button>
+  <ul id="choreList"></ul>
+</div>
+
+<div class="section">
+  <h2>💡 Suggested Chores</h2>
+  <ul id="suggestions"></ul>
+</div>
+
+<div class="section">
+  <h2>⭐ Star Tracker</h2>
+  <p>Total Stars: <span id="starCount">0</span></p>
+</div>
+
+<div class="section">
+  <h2>🎲 Power-Up Spinner</h2>
+  <button class="btn" onclick="spinPowerUp()">Spin</button>
+  <p id="powerupResult"></p>
+</div>
+
+<script>
+  let starTotal = 0;
+  const themeData = {
+    hero: {
+      title: "🦸 Welcome to Hero HQ!",
+      chores: ["Save the day (take out trash)", "Train in the lair (clean your room)", "Organize gadgets (tidy desk)"],
+      powerups: ["Fly faster: Double stars!", "Shield: Skip a chore!", "Team-up: Trade a chore!", "Hero Medal: +5 stars!"]
+    },
+    pirate: {
+      title: "🏴‍☠️ Ahoy! Welcome to Pirate's Cove!",
+      chores: ["Swab the deck (sweep floor)", "Sort treasure (clean toys)", "Feed the parrot (feed pets)"],
+      powerups: ["Buried Gold: +5 coins!", "Parrot Helper: Trade chores!", "Skip Ship Duty!", "Double Doubloons!"]
+    },
+    space: {
+      title: "🚀 Welcome to Galactic Galaxy!",
+      chores: ["Fuel the ship (dishes)", "Clean control room (vacuum)", "Organize gear (laundry)"],
+      powerups: ["Cosmic Boost: Double stars!", "Teleport Pass: Skip a chore!", "Space Credits: +5 stars!", "Astro Buddy: Trade a task!"]
+    },
+    safari: {
+      title: "🐾 Wild Safari Adventure!",
+      chores: ["Clean animal den (room)", "Pack explorer bag (school bag)", "Gather supplies (pick up toys)"],
+      powerups: ["Paw Power: Double stars!", "Animal Ally: Swap a chore!", "Jungle Jackpot: +5 stars!", "Rest in the Shade: Skip one chore!"]
+    },
+    wizard: {
+      title: "🧙 Welcome to Wizarding World!",
+      chores: ["Polish your wand (dust desk)", "Sort potions (toys)", "Sweep the castle (vacuum)"],
+      powerups: ["Magic Scroll: +5 mana!", "Invisibility Cloak: Skip chore!", "Potion Boost: Double stars!", "Spell Swap: Trade chores!"]
+    },
+    dino: {
+  title: "🦖 Welcome to Dino World!",
+  chores: ["Feed the raptors (feed pets)", "Clear the dig site (clean floor)", "Sort fossils (tidy up toys)" ],
+  powerups: ["Dino Roar Bonus: +5 fossil points!", "T-Rex Time-Saver: Skip a chore!", "Double Fossils!", "Veloci-Swap: Trade a chore!"]
+}
+  };
+
+  function updateTheme() {
+    const theme = document.getElementById("theme").value;
+    const title = themeData[theme].title;
+    document.getElementById("themeTitle").textContent = title;
+
+    // Update suggestions
+    const suggestions = themeData[theme].chores;
+    const suggestionsList = document.getElementById("suggestions");
+    suggestionsList.innerHTML = '';
+    suggestions.forEach(chore => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.className = 'btn';
+      btn.textContent = `Add "${chore}"`;
+      btn.onclick = () => addChore(chore, 2);
+      li.appendChild(btn);
+      suggestionsList.appendChild(li);
+    });
+  }
+
+  function addChore(customName = null, fixedStars = null) {
+    const name = customName || document.getElementById("choreInput").value.trim();
+    const stars = fixedStars || parseInt(document.getElementById("difficulty").value);
+    if (name === "") return;
+
+    const li = document.createElement("li");
+    li.innerHTML = `${name} <span class="star">(${stars}⭐)</span> 
+      <button class="btn" onclick="completeChore(${stars}, this)">Done</button>`;
+    document.getElementById("choreList").appendChild(li);
+
+    if (!customName) document.getElementById("choreInput").value = '';
+  }
+
+  function completeChore(stars, button) {
+    starTotal += stars;
+    document.getElementById("starCount").textContent = starTotal;
+    button.disabled = true;
+    button.textContent = "✅ Done";
+  }
+
+  function spinPowerUp() {
+    const theme = document.getElementById("theme").value;
+    const powerups = themeData[theme].powerups;
+    const result = powerups[Math.floor(Math.random() * powerups.length)];
+    if (result.includes("+5")) starTotal += 5;
+    if (result.toLowerCase().includes("double")) starTotal *= 2;
+    document.getElementById("starCount").textContent = starTotal;
+    document.getElementById("powerupResult").textContent = result;
+  }
+
+  // Init default theme
+  updateTheme();
+</script>
+
+</body>
+</html>
